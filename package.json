@@ -1,0 +1,29 @@
+{
+  "name": "node-crawler",
+  "version": "1.0.0",
+  "description": "Crawler based on node",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/slientServer/Node-Crawler.git"
+  },
+  "author": "bhao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/slientServer/Node-Crawler/issues"
+  },
+  "homepage": "https://github.com/slientServer/Node-Crawler#readme",
+  "dependencies": {
+    "async": "^2.3.0",
+    "cheerio": "^0.22.0",
+    "config-lite": "^2.0.0",
+    "eventproxy": "^0.3.5",
+    "express": "^4.15.2",
+    "superagent": "^3.5.2",
+    "url": "^0.11.0"
+  }
+}
