@@ -8,9 +8,12 @@ var config = require('config-lite')({
 });
 
 module.exports= function(req, res){
-	var pageUrls= prepareUrls();
+	var renderRes= res;
+	var entranceUrl= prepareUrls();
 	if(config.isLogin){
 		login();
+	}else{
+		requestEntancePage();
 	}
 
 	// pageUrls.forEach(function(pageUrl){
@@ -37,18 +40,44 @@ module.exports= function(req, res){
 	// });
 
 	function prepareUrls(){
-		return ['https://jira.successfactors.com/secure/Dashboard.jspa'];
+		return config.pageUrls;
 	}
 
 	function login(){
-		superagent.post('https://www.baidu.com').send({os_username: config.username, os_password: config.password, login: "Log In"}).set('Accept', 'application/json').end(function(err, ores){
-			res.send(ores.headers['set-cookie']);
-			// superagent.get('https://jira.successfactors.com').set('Cookie', ).end(function(){
-
-			// });
+		var loginInfo= {};
+		var header= {
+			"Content-Type":"application/x-www-form-urlencoded;charset=UTF-8",
+		};
+		loginInfo[config.loginInfo.usernameKey]= config.loginInfo.username;
+		loginInfo[config.loginInfo.passwordKey]= config.loginInfo.password;
+		superagent.post(config.loginInfo.loginUrl).send(loginInfo).set(header).end(function(err, oRes){
+			requestEntancePage(oRes);
 		});
 	}
 
+	function requestEntancePage(oRes){
+		if(!oRes){
+			oRes={
+				headers: {
+					'set-cookie': ''
+				}
+			}
+		}
+		superagent.get(config.entranceUrl).set('Cookie', cookieParse(oRes.headers['set-cookie'])).end(function(err, oRes){
+			renderRes.send(oRes.text);
+		});
+	}
 
-
+	function cookieParse(orginArr){
+		var cookieNameList= config.loginInfo.cookieKeys;
+		var result= '';
+		orginArr.forEach(function(value){
+			for(var idx=0; idx< cookieNameList.length; idx++){
+				if((res= (new RegExp('^'+cookieNameList[idx]+'='+'\\S*;', 'i').exec(value)))){
+					result= result+ res[0];
+				}
+			}
+		})
+		return result;
+	}
 }
