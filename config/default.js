@@ -10,5 +10,6 @@ module.exports ={
     passwordKey: 'os_password',
     cookieKeys: ['JSESSIONID']
 	},
-	entranceUrl: 'https://jira.successfactors.com/secure/Dashboard.jspa'
+	entranceUrl: 'https://jira.successfactors.com/secure/Dashboard.jspa',
+	domParseFunction: 'jiraParse'
 };
