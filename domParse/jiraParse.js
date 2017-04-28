@@ -1,16 +1,37 @@
-var cheerio= require('cheerio');
+var userModel= require('../model/user');
+var dashModel= require('../model/dashboard');
 
-module.exports= function(renderRes, dom){
-	var cheerioDom = cheerio.load(dom);
-	var dashbordsUrls= getAllDashbordsUrls(dom);
-	renderRes.send(dashbordsUrls);
+module.exports= {
+	generateDashboardSelector: function generateDashboardSelector(){
+		return [
+			{
+				key: 'gadgetList',
+				selector: ['.gadget .dashboard-item-frame'],//Reserved for id and index should be 0
+				content: 'id'
+			},
+			{
+				key: 'gadgetName',
+				selector: ['.dashboard-item-header .dashboard-item-title'],
+				content: 'innerHTML'
+			},
+			{
+				key: 'totals',
+				selector: ['.dashboard-item-content tbody tr:last-child td:last-child a', 
+									'.dashboard-item-content .results-count a', 
+									'.dashboard-item-content .legend-title b',
+									'.dashboard-item-content tbody tr:last-child td:last-child a',
+									'.dashboard-item-content tbody tr:last-child td a'],
+				content: 'innerText'
+			},
+			{
+				key: 'gadgetFilter',
+				selector: ['.dashboard-item-content .data-footer .filter'],
+				content: 'innerText'
+			}
+		];
+	},
 
-	function getAllDashbordsUrls(dom){
-		var dashbords= eval((new RegExp('AG[^]DashboardManager[^]setup\\({[^]*}\\);', 'm').exec(dom))[0].replace('AG.DashboardManager.setup', '')).layouts;
-		var urls= [];
-		dashbords.forEach(function(value, key){
-			urls.push(value.id);
-		});
-		return urls;
+	saveResultToDB: function parseResultHandler(scanResult){
+		dashModel.create(scanResult);
 	}
 }

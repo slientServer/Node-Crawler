@@ -1,6 +1,6 @@
 module.exports ={
 	port: 3000,
-	mongodb: 'mongodb://localhost:27017/crawler',//mongodb地址， blog为
+	mongodb: 'mongodb://localhost/crawler',//mongodb地址
 	isLogin: true,
 	loginInfo: {
 		username: 'I308845',
