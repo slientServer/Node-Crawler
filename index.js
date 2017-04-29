@@ -4,10 +4,11 @@ var config = require('config-lite')({
 });
 var crawler= require('./crawler');
 var routes= require('./routes');
+var logger= require('./logger/winston')();
 
 routes(app);
 
 app.listen(config.port, function(){
-	console.log('Server start successfully!');
+	logger.log('info', 'Server start successfully !')
 	crawler(false);
 });

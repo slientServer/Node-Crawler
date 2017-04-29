@@ -1,13 +1,14 @@
 var Dashboard = require('../lib/mongo').Dashboard;
 var EventProxy= require('../event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
+var logger= require('../logger/winston')();
 
 module.exports= {
 
  create: function create(dashboard) {
     return Dashboard.create(dashboard, function (err, dashboard) {
-	  	if (err) console.log(err);
-	  	console.log('Create successfully!');
+	  	if (err) logger.log('error', 'Dashboard %s save faile with: %s', dashboard.gadgetId, err);
+	  	logger.log('info', 'One dashboard save successfully!');
 	});
   },
 

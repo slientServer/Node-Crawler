@@ -3,12 +3,14 @@ var config = require('config-lite')({
 	config_basedir: __dirname
 });
 var Nightmare = require('nightmare');		
-var nightmare = Nightmare({ show: true, waitTimeout: 10000 });
+var nightmare = Nightmare({ show: true, waitTimeout: 20000 });
 var jiraParse= require('./domParse/'+ config.domParseFunction);
 var dashModel= require('./model/dashboard');
 var userModel= require('./model/user');
+var winston= require('winston');
 var EventProxy= require('./event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
+var logger= require('./logger/winston')();
 var currentEmployeeId= '';
 var latestScanCount= 0;
 var allUsers= [];
@@ -37,10 +39,13 @@ module.exports= function(req, res){
 			if(++initIndex< allUsers.length){
 				login(allUsers[initIndex]);
 			}else{
+				logger.log('info', '%s round scan finished ......', (latestScanCount+1));
 				eventproxy.removeListener('onceUserScanFinished');
+				nightmare.end();
 			}
 		});			
 	
+		logger.log('info', 'Start login !');
 		login(allUsers[initIndex]);
 	}
 
@@ -53,11 +58,12 @@ module.exports= function(req, res){
 		.click('#login-form-submit')
 		.wait('#log_out')
 		.then(function(result){
+			logger.log('info', '%s login successfully !', userInfo.employeeId);
 			currentEmployeeId= userInfo.employeeId;
 			gotoMainPage();
 		})
 	  .catch(function (error) {
-		  console.error('Search failed:', error);
+		  logger.log('error', '%s login failed !', userInfo.employeeId);
 		  eventproxy.emit('onceUserScanFinished');
 		});
 	}
@@ -80,6 +86,9 @@ module.exports= function(req, res){
  		})
  		.then(function(result){
  			scanAllDashboards(result);
+ 		})
+ 		.catch(function(error){
+ 			logger.log('error', 'Open main page failed with: %s', error);
  		});
 	}
 
@@ -127,10 +136,13 @@ module.exports= function(req, res){
 				gadget= {};
 			};
 			return gadgetList;
-		}, selectors, dashboardInfo, currentEmployeeId,latestScanCount)
+		}, selectors, dashboardInfo, currentEmployeeId, latestScanCount)
 		.then(function(result){
 			jiraParse.saveResultToDB(result);
 			eventproxy.emit('dashboradHandleFinished');
+		})
+		.catch(function(error){
+			logger.log('warning', 'Dashboard %s open failed: %s', dashboardInfo.id, error);
 		});
 	}
 }
