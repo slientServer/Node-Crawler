@@ -1,4 +1,6 @@
 var User = require('../lib/mongo').User;
+var EventProxy= require('../event/eventproxy');
+var eventproxy= EventProxy.getEventProxy();
 
 module.exports= {
  // 注册一个用户
@@ -23,7 +25,7 @@ module.exports= {
   getAllUsers: function getAllUsers(){
   	return User.find(function(err, res){
 		  if (err) return handleError(err);
-      console.log(res);
+      eventproxy.emit('allUsersReady', res);
   	});
   }
 }

@@ -3,38 +3,62 @@ var config = require('config-lite')({
 	config_basedir: __dirname
 });
 var Nightmare = require('nightmare');		
-var nightmare = Nightmare({ show: true });
+var nightmare = Nightmare({ show: true, waitTimeout: 10000 });
 var jiraParse= require('./domParse/'+ config.domParseFunction);
 var dashModel= require('./model/dashboard');
+var userModel= require('./model/user');
 var EventProxy= require('./event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
 var currentEmployeeId= '';
 var latestScanCount= 0;
+var allUsers= [];
 module.exports= function(req, res){
-	eventproxy.on('latestScanCount', function(res){
-		latestScanCount= res.latestScanCount;
-	});
-	dashModel.getCurrentScanCount();
-
-	if(config.isLogin){
-		login();
-	}else{
-		gotoMainPage();
+	function initDataPrepare(){
+		eventproxy.on('latestScanCount', function(res){
+			latestScanCount= res.latestScanCount;
+		});
+		eventproxy.on('allUsersReady', function(res){
+			allUsers= res;
+			if(config.isLogin){
+				cycleLoginForAllUsers();
+			}else{
+				gotoMainPage();
+			}
+		});
+		dashModel.getCurrentScanCount();
+		userModel.getAllUsers();
 	}
 
-	function login(){
+	initDataPrepare();
+
+	function cycleLoginForAllUsers(){
+		var initIndex=0;
+		eventproxy.on('onceUserScanFinished', function(){
+			if(++initIndex< allUsers.length){
+				login(allUsers[initIndex]);
+			}else{
+				eventproxy.removeListener('onceUserScanFinished');
+			}
+		});			
+	
+		login(allUsers[initIndex]);
+	}
+
+	function login(userInfo){
 		nightmare
+		.goto(config.loginInfo.logoutUrl)
 		.goto(config.loginInfo.loginUrl)
-		.type('#login-form-username', config.loginInfo.username)
-		.type('#login-form-password', config.loginInfo.password)
+		.type('#login-form-username', userInfo.employeeId)
+		.type('#login-form-password', userInfo.password)
 		.click('#login-form-submit')
 		.wait('#log_out')
 		.then(function(result){
-			currentEmployeeId= config.loginInfo.username;
+			currentEmployeeId= userInfo.employeeId;
 			gotoMainPage();
 		})
-	    .catch(function (error) {
-		    console.error('Search failed:', error);
+	  .catch(function (error) {
+		  console.error('Search failed:', error);
+		  eventproxy.emit('onceUserScanFinished');
 		});
 	}
 
@@ -61,14 +85,15 @@ module.exports= function(req, res){
 
 	function scanAllDashboards(dashboardInfoList){
 		var initIndex= 0;
-		gotoDashboardPage(dashboardInfoList[initIndex]);
 		eventproxy.on('dashboradHandleFinished', function(){
 			if(++initIndex< dashboardInfoList.length){
 				gotoDashboardPage(dashboardInfoList[initIndex]);
 			}else{
 				eventproxy.removeListener('dashboradHandleFinished');
+				eventproxy.emit('onceUserScanFinished');
 			}
 		});	
+		gotoDashboardPage(dashboardInfoList[initIndex]);
 	}
 
 	function gotoDashboardPage(dashboardInfo){
