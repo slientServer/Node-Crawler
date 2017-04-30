@@ -4,7 +4,7 @@ var config = require('config-lite')({
 });
 var logger= require('../logger/winston')();
 
-module.exports= function(targetUser){
+module.exports= function(targetUser, nickName, mainContent){
     // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
         service: config.email.senderEmailType,
@@ -17,10 +17,10 @@ module.exports= function(targetUser){
     // setup email data with unicode symbols
     let mailOptions = {
         from: config.email.senderName, // sender address
-        to: 'biao.hao@sap.com', // list of receivers
+        to: targetUser, // list of receivers
         subject: config.email.subject, // Subject line
         text: config.email.text, // plain text body
-        html: config.email.html // html body
+        html: (config.email.html).replace('[nickname]', nickName).replace('[maincontent]', mainContent) // html body
     };
     // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {

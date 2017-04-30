@@ -3,19 +3,21 @@ var config = require('config-lite')({
 	config_basedir: __dirname
 });
 var Nightmare = require('nightmare');		
-var nightmare = Nightmare({ show: false, waitTimeout: 20000 });
+var nightmare = Nightmare({ show: true, waitTimeout: 20000 });
 var jiraParse= require('./domParse/'+ config.domParseFunction);
 var dashModel= require('./model/dashboard');
 var userModel= require('./model/user');
-var winston= require('winston');
 var EventProxy= require('./event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
 var logger= require('./logger/winston')();
+var compare= require('./compare');
 var currentEmployeeId= '';
 var latestScanCount= 0;
 var allUsers= [];
+var currenUserInfo= {};
 module.exports= function(req, res){
 	function initDataPrepare(){
+		compare.initLatestEvent();
 		eventproxy.on('latestScanCount', function(res){
 			latestScanCount= res.latestScanCount;
 		});
@@ -27,7 +29,7 @@ module.exports= function(req, res){
 				gotoMainPage();
 			}
 		});
-		dashModel.getCurrentScanCount();
+		dashModel.getLatesScanCount();
 		userModel.getAllUsers();
 	}
 
@@ -37,6 +39,7 @@ module.exports= function(req, res){
 		var initIndex=0;
 		eventproxy.on('onceUserScanFinished', function(){
 			if(++initIndex< allUsers.length){
+				currenUserInfo= allUsers[initIndex];
 				login(allUsers[initIndex]);
 			}else{
 				logger.log('info', '%s round scan finished ......', (latestScanCount+1));
@@ -45,7 +48,8 @@ module.exports= function(req, res){
 			}
 		});			
 	
-		logger.log('info', 'Start login !');
+		logger.log('info', 'First user login!');
+		currenUserInfo= allUsers[initIndex];
 		login(allUsers[initIndex]);
 	}
 
@@ -58,13 +62,13 @@ module.exports= function(req, res){
 		.click('#login-form-submit')
 		.wait('#log_out')
 		.then(function(result){
-			logger.log('info', '%s login successfully !', userInfo.employeeId);
+			logger.log('info', '%s login successfully!', userInfo.employeeId);
 			currentEmployeeId= userInfo.employeeId;
 			gotoMainPage();
 		})
 	  .catch(function (error) {
-		  logger.log('error', '%s login failed !', userInfo.employeeId);
-		  eventproxy.emit('onceUserScanFinished');
+		  logger.log('error', '%s login failed!', userInfo.employeeId);
+		  eventproxy.emit('onceUserScanFinished', currenUserInfo);
 		});
 	}
 
@@ -99,7 +103,7 @@ module.exports= function(req, res){
 				gotoDashboardPage(dashboardInfoList[initIndex]);
 			}else{
 				eventproxy.removeListener('dashboradHandleFinished');
-				eventproxy.emit('onceUserScanFinished');
+				eventproxy.emit('onceUserScanFinished', currenUserInfo);
 			}
 		});	
 		gotoDashboardPage(dashboardInfoList[initIndex]);
@@ -139,6 +143,7 @@ module.exports= function(req, res){
 		}, selectors, dashboardInfo, currentEmployeeId, latestScanCount)
 		.then(function(result){
 			jiraParse.saveResultToDB(result);
+			compare.maintainCurrentUserDashboard(result);
 			eventproxy.emit('dashboradHandleFinished');
 		})
 		.catch(function(error){

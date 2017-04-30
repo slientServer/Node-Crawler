@@ -19,18 +19,24 @@ module.exports= {
   	});
   },
 
-  getCurrentScanCount: function getCurrentScanCount(){
+  getLatesScanCount: function getLatesScanCount(){
+    var x=123;
     Dashboard
       .find()
       .select('scanCount')
       .sort('-scanCount')
       .limit(1)
       .exec(function(err, res){
+        if(err) logger.log('error', 'Latest round count fetch failed');
         var scanCount=0;
         if(res[0] && res[0].scanCount){
           scanCount= res[0].scanCount;
         }
         eventproxy.emit('latestScanCount', {'latestScanCount': scanCount});
+        Dashboard.find({'scanCount': scanCount}, {},  function(err, res){
+          if(err) logger.log('error', 'Latest record %s fetch failed', scanCount);
+          eventproxy.emit('lastRoundRecord', res);
+        });
       });
-  },
+  }
 }

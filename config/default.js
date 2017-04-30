@@ -17,8 +17,12 @@ module.exports ={
 		senderEmailType: 'gmail',
 		senderName: '"Jira-Helper-Center 👻" <jira.helper.center@gmail.com>',
 		subject: 'Jira Update Notification',
-		text: 'Hello, easy text~',
-		html: '<b>Hello, html ~</b>'	
+		text: 'Welcome to Jira Helper ~',
+		html: '<h2>Jira Helper Notify Email</h2>'+
+					'<hr><p style="margin: 20px 0 20px 0">Dear [nickname]: </p> According latest scan result, your dashboards have some updates as below:'+
+					'<div class="display: block; margin: 20px 0 0 0;">[maincontent]</div>'+
+					'<p style="margin: 20px 0 0 0">Best Regards</p>'+
+					'<p>Jira Helper Center</P>'
 	}
 
 };

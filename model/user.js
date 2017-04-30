@@ -1,6 +1,7 @@
 var User = require('../lib/mongo').User;
 var EventProxy= require('../event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
+var logger= require('../logger/winston')();
 
 module.exports= {
  // 注册一个用户
@@ -17,14 +18,14 @@ module.exports= {
   	query[key]= value;
   	newVal[key]= newVlaue;
   	User.findOneAndUpdate(query, newVal, function(err, doc){
-  		if(err) console.log(err);
+  		if(err) logger.log('error', err);
   		return true;
   	});
   },
 
   getAllUsers: function getAllUsers(){
   	return User.find(function(err, res){
-		  if (err) return handleError(err);
+		  if (err) logger.log('error', err);
       eventproxy.emit('allUsersReady', res);
   	});
   }
