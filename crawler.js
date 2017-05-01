@@ -11,6 +11,7 @@ var EventProxy= require('./event/eventproxy');
 var eventproxy= EventProxy.getEventProxy();
 var logger= require('./logger/winston')();
 var compare= require('./compare');
+var cheerio= require('cheerio');
 var currentEmployeeId= '';
 var latestScanCount= 0;
 var allUsers= [];
@@ -113,6 +114,7 @@ module.exports= function(req, res){
 		var selectors= jiraParse.generateDashboardSelector();	
 		nightmare
 		.goto(dashboardInfo.url)
+		.wait(2000)
 		.evaluate(function(selectors, dashboardInfo, currentEmployeeId, latestScanCount){
 			var gadgetList=[];
 			var gadget= {};
@@ -123,7 +125,10 @@ module.exports= function(req, res){
 				for(var idx=1; idx< selectors.length; idx++){
 					selectorElements= selectors[idx].selector;
 					for(var key in selectorElements){
-						if(document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key])){
+						if(selectors[idx].key== 'totals' && document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key]) && document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key]).tagName== 'IFRAME'){
+							elem= document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key]).contentWindow.document.querySelector('.gadget .view div p');
+							break;
+						}else if(document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key]) && document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key])[selectors[idx].content]){
 							elem= document.querySelector('#'+gadgetListElement[idy].id+' '+selectorElements[key]);
 							break;
 						}

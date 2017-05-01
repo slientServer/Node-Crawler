@@ -16,11 +16,12 @@ module.exports= {
 			},
 			{
 				key: 'totals',
-				selector: ['.dashboard-item-content tbody tr:last-child td:last-child a', 
-									'.dashboard-item-content .results-count a', 
-									'.dashboard-item-content .legend-title b',
-									'.dashboard-item-content tbody tr:last-child td:last-child a',
-									'.dashboard-item-content tbody tr:last-child td a'],
+				selector: [ '.dashboard-item-content iframe',
+							'.dashboard-item-content tbody tr:last-child td:last-child a', 
+							'.dashboard-item-content .results-count a', 
+							'.dashboard-item-content .legend-title b',
+							'.dashboard-item-content tbody tr:last-child td:last-child a',
+							'.dashboard-item-content tbody tr:last-child td a'],
 				content: 'innerText'
 			},
 			{
