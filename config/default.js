@@ -23,6 +23,7 @@ module.exports ={
 					'<div class="display: block; margin: 20px 0 0 0;">[maincontent]</div>'+
 					'<p style="margin: 20px 0 0 0">Best Regards</p>'+
 					'<p>Jira Helper Center</P>'
-	}
+	},
+	jobRunTime: ['11:30:00', '16:00:00']
 
 };
