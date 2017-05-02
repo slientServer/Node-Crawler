@@ -3,7 +3,7 @@ var config = require('config-lite')({
 	config_basedir: __dirname
 });
 var Nightmare = require('nightmare');		
-var nightmare = Nightmare({ show: false, waitTimeout: 20000 });
+var nightmare = Nightmare({ show: true, waitTimeout: 20000 });
 var jiraParse= require('./domParse/'+ config.domParseFunction);
 var dashModel= require('./model/dashboard');
 var userModel= require('./model/user');

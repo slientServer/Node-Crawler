@@ -37,7 +37,10 @@ module.exports= {
 					});
 				}
 			}
-			sendEmailToEmployee(currentUserInfo, needToNotification);
+		
+			if(needToNotification.length> 0){
+				sendEmailToEmployee(currentUserInfo, needToNotification);
+			}
 			needToNotification= [];
 		}
 
@@ -47,6 +50,7 @@ module.exports= {
 			for(var idx=0; idx< needToNotification.length; idx++){
 				mainContent= mainContent+ (template.replace('[gadgetname]', needToNotification[idx].gadgetName).replace('[dashboardname]', needToNotification[idx].dashboardName).replace('[oldtotals]', needToNotification[idx].oldTotals).replace('[newtotals]', needToNotification[idx].newTotals).replace('[filter]', needToNotification[idx].filter));
 			}
+
 			if(currentUserInfo.isNotifyEmail== 'y'){
 				email(currentUserInfo.email, currentUserInfo.nickname, mainContent);
 			}

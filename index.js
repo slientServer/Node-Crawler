@@ -18,4 +18,5 @@ later.setInterval(function(){
 
 app.listen(config.port, function(){
 	logger.log('info', 'Server start successfully!')
+	// crawler(false);
 });

@@ -13,7 +13,6 @@ module.exports= function(targetUser, nickName, mainContent){
             pass: config.email.senderPass
         }
     });
-
     // setup email data with unicode symbols
     let mailOptions = {
         from: config.email.senderName, // sender address

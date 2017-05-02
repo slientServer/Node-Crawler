@@ -24,6 +24,6 @@ module.exports ={
 					'<p style="margin: 20px 0 0 0">Best Regards</p>'+
 					'<p>Jira Helper Center</P>'
 	},
-	jobRunTime: ['11:30:00', '16:00:00']
+	jobRunTime: ['14:00:00', '16:00:00', '18:00:00']
 
 };
