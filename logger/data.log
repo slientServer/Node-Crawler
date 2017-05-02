@@ -1635,3 +1635,18 @@
 {"level":"error","message":"I3088454 login failed!","timestamp":"2017-05-02T05:24:29.308Z"}
 {"level":"error","message":"I3088455 login failed!","timestamp":"2017-05-02T05:24:53.339Z"}
 {"level":"info","message":"18 round scan finished ......","timestamp":"2017-05-02T05:24:53.339Z"}
+{"level":"info","message":"Server start successfully!","timestamp":"2017-05-02T05:30:08.309Z"}
+{"level":"info","message":"Server start successfully!","timestamp":"2017-05-02T06:06:55.280Z"}
+{"level":"info","message":"Scan start ...","timestamp":"2017-05-02T06:10:00.000Z"}
+{"level":"info","message":"First user login!","timestamp":"2017-05-02T06:10:00.022Z"}
+{"level":"info","message":"I308845 login successfully!","timestamp":"2017-05-02T06:10:13.263Z"}
+{"level":"info","message":"One dashboard save successfully!","timestamp":"2017-05-02T06:10:16.435Z"}
+{"level":"info","message":"One dashboard save successfully!","timestamp":"2017-05-02T06:10:19.872Z"}
+{"level":"info","message":"One dashboard save successfully!","timestamp":"2017-05-02T06:10:28.038Z"}
+{"level":"info","message":"One dashboard save successfully!","timestamp":"2017-05-02T06:10:32.082Z"}
+{"level":"info","message":"One dashboard save successfully!","timestamp":"2017-05-02T06:10:36.312Z"}
+{"level":"info","message":"Message from \"Jira-Helper-Center 👻\" <jira.helper.center@gmail.com> to biao.hao@sap.com sent successfully","timestamp":"2017-05-02T06:10:40.575Z"}
+{"level":"error","message":"I3088454 login failed!","timestamp":"2017-05-02T06:11:01.020Z"}
+{"level":"error","message":"I3088455 login failed!","timestamp":"2017-05-02T06:11:25.335Z"}
+{"level":"info","message":"19 round scan finished ......","timestamp":"2017-05-02T06:11:25.335Z"}
+{"level":"info","message":"Server start successfully!","timestamp":"2017-05-02T06:16:07.746Z"}

@@ -1,5 +1,4 @@
 # Node-Crawler
 Crawler implemented with nodejs.
 
-## Block Issues
-* Keep login failed: content-type
+This is a little tool for watching the jira data change.
