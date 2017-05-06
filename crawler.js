@@ -3,7 +3,7 @@ var config = require('config-lite')({
 	config_basedir: __dirname
 });
 var Nightmare = require('nightmare');		
-var nightmare = Nightmare({ show: false, waitTimeout: 20000 });
+var nightmare = Nightmare({ show: true, waitTimeout: 20000, typeInterval: 2});
 var jiraParse= require('./domParse/'+ config.domParseFunction);
 var dashModel= require('./model/dashboard');
 var userModel= require('./model/user');
@@ -16,7 +16,7 @@ var currentEmployeeId= '';
 var latestScanCount= 0;
 var allUsers= [];
 var currenUserInfo= {};
-module.exports= function(req, res){
+module.exports= function(){
 	function initDataPrepare(){
 		compare.initLatestEvent();
 		eventproxy.on('latestScanCount', function(res){

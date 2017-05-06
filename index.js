@@ -50,10 +50,10 @@ var sched= later.parse.recur().on(config.jobRunTime).time();
 later.date.localTime();
 later.setInterval(function(){
 	logger.log('info', 'Scan start ...');
-	crawler(false);
+	crawler();
 }, sched);
 
 app.listen(config.port, function(){
 	logger.log('info', 'Server start successfully!')
-	// crawler(false);
+	crawler();
 });
