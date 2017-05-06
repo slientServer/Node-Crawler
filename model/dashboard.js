@@ -7,9 +7,12 @@ module.exports= {
 
  create: function create(dashboard) {
     return Dashboard.create(dashboard, function (err, dashboard) {
-	  	if (err) logger.log('error', 'Dashboard %s save faile with: %s', dashboard.gadgetId, err);
-	  	logger.log('info', 'One dashboard save successfully!');
-	});
+	  	if (err) {
+        logger.log('error', 'Dashboard save faile with: %s', dashboard);
+      }else{
+        logger.log('info', 'One dashboard save successfully!');
+      }
+	 });
   },
 
   getAllDashboards: function getAllDashboards(){

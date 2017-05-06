@@ -1,12 +1,18 @@
 module.exports ={
 	port: 3000,
+	// mongodb: 'mongodb://138.68.56.101/crawler',//mongodb地址
 	mongodb: 'mongodb://localhost/crawler',//mongodb地址
+	session: {
+		key: 'jiraSession',
+		secret: 'jira',
+		maxAge: 2592000000
+	},
 	isLogin: true,
 	loginInfo: {
 		loginUrl: 'https://jira.successfactors.com/login.jsp',
 		logoutUrl: 'https://jira.successfactors.com/logout',
     usernameKey: 'os_username',
-    passwordKey: 'os_password',
+    passwordKey: 'os_passwosrd',
     cookieKeys: ['JSESSIONID']
 	},
 	entranceUrl: 'https://jira.successfactors.com/secure/Dashboard.jspa',
@@ -24,6 +30,6 @@ module.exports ={
 					'<p style="margin: 20px 0 0 0">Best Regards</p>'+
 					'<p>Jira Helper Center</P>'
 	},
-	jobRunTime: ['14:00:00', '16:00:00', '18:00:00']
+	jobRunTime: ['14:00:00', '15:32:00', '18:00:00']
 
 };

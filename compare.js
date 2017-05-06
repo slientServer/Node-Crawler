@@ -30,6 +30,7 @@ module.exports= {
 				if(tempInfo.totals!= formattedData[tempInfo.employeeId+tempInfo.dashboardId+tempInfo.gadgetId]){
 					needToNotification.push({
 						'dashboardName': tempInfo.dashboardName,
+						'dashboardId': tempInfo.dashboardId,
 						'gadgetName': tempInfo.gadgetName,
 						'newTotals': tempInfo.totals,
 						'oldTotals': (formattedData[tempInfo.employeeId+tempInfo.dashboardId+tempInfo.gadgetId]== undefined? 'NA': formattedData[tempInfo.employeeId+tempInfo.dashboardId+tempInfo.gadgetId]),
@@ -45,14 +46,14 @@ module.exports= {
 		}
 
 		function sendEmailToEmployee(currentUserInfo, needToNotification){
-			var template= '<p style= "margin: 10px 0 10px 0;">The gadget <span style="color: red;">[gadgetname]</span>(filter by [filter]) totals under dashboard <span style="color: red;">[dashboardname]</span> change from <span style="color: green;">[oldtotals]</span> to <span style="color: green;">[newtotals]</span>.'
+			var template= '<p style= "margin: 10px 0 10px 0;">The gadget <span style="color: red;">[gadgetname]</span>(filter by [filter]) totals under dashboard <span style="color: red;"><a href="https://jira.successfactors.com/secure/Dashboard.jspa?selectPageId=[dashboardId]">[dashboardname]</a></span> change from <span style="color: green;">[oldtotals]</span> to <span style="color: green;">[newtotals]</span>.'
 			var mainContent= '';
 			for(var idx=0; idx< needToNotification.length; idx++){
-				mainContent= mainContent+ (template.replace('[gadgetname]', needToNotification[idx].gadgetName).replace('[dashboardname]', needToNotification[idx].dashboardName).replace('[oldtotals]', needToNotification[idx].oldTotals).replace('[newtotals]', needToNotification[idx].newTotals).replace('[filter]', needToNotification[idx].filter));
+				mainContent= mainContent+ (template.replace('[gadgetname]', needToNotification[idx].gadgetName).replace('[dashboardname]', needToNotification[idx].dashboardName).replace('[oldtotals]', needToNotification[idx].oldTotals).replace('[newtotals]', needToNotification[idx].newTotals).replace('[filter]', needToNotification[idx].filter)).replace('[dashboardId]', needToNotification[idx].dashboardId);
 			}
 
 			if(currentUserInfo.isNotifyEmail== 'y'){
-				email(currentUserInfo.email, currentUserInfo.nickname, mainContent);
+				// email(currentUserInfo.email, currentUserInfo.nickname, mainContent);
 			}
 			if(currentUserInfo.isNotifyWechat== 'y'){
 

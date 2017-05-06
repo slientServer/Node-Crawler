@@ -26,7 +26,7 @@ module.exports= function(req, res){
 			allUsers= res;
 			if(config.isLogin){
 				cycleLoginForAllUsers();
-			}else{
+			}else{view
 				gotoMainPage();
 			}
 		});
